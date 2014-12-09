@@ -1,0 +1,26 @@
+node_js:
+- '0.11'
+language: node_js
+services: mongodb
+script: npm run test-travis
+before_install:
+- sudo apt-get install cimg-dev libphash0-dev libmagickcore-dev
+- curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo
+  bash -
+- curl http://ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.latest.tar.gz | sudo
+  tar -C /usr/local/bin/ -xvz
+- mkdir ImageMagick
+- curl http://www.imagemagick.org/download/ImageMagick.tar.gz | tar -C ImageMagick
+  --strip-components=1 -xvz
+- cd ImageMagick
+- "./configure --with-webp=yes"
+- make
+- sudo make install
+- sudo ldconfig /usr/local/lib
+- cd ..
+after_script: npm install coveralls@ && cat ./coverage/lcov.info | coveralls
+env:
+  global:
+  - secure: KIMRGrhuF3YCOOSUN6sC+ZQqtOLN4V2HDwv2uGxi/oP6mkNrAw1SasrCFiiMtMpYp9bQ1ASkm9iTJ37YaB6b70EpBZitdHEwOZmD7JkYaiLE/wnX+uKeIREdU0b9/nGNbu9feovFLutnCPgRSR8JSdsmOUdjo/VWu/4GpjDYYnc=
+  - secure: ED7pPqNBDx9cEPJx/6/YyE3+eN/pRBF+Qp1iV/w+MsE9yU3OkgamUyBfC8+CgMaoUazIStLfBDH0IQCx4Lt+j+/DIFSxdRY69bvfPGQHlmq63B8vYpv4i/mT32zIpuSOHdknHshLX1bGE1LimaX/gOg4UThiIvXqEKBIXhfTAVA=
+  - secure: LQyfTcgL5QgeFaxknq35HPWbYwZeV9APACK3/OmoRzUFp3vi5vFRfFsj+TdG+EnfgHBeXNkFOlpMqhr1oFCJyaZ6jFA3mWPlXOg6z6uU5LRZgszsZZXNZGJkhc+5ZquOco6lAH0AwmqlPjBVLIwpXxKxnRjV4cFcY+zohHaB63Q=
